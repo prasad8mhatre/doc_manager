@@ -1,10 +1,26 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { DocumentsModule } from './documents/documents.module';
+import { IngestionModule } from './ingestion/ingestion.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 6024,
+      username: 'langchain',
+      password: 'langchain',
+      database: 'langchain',
+      autoLoadEntities: true,
+      synchronize: true, // Disable in production
+    }),
+    AuthModule,
+    UsersModule,
+    DocumentsModule,
+    IngestionModule,
+  ],
 })
 export class AppModule {}
