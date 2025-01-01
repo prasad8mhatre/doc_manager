@@ -48,7 +48,7 @@ async def ingest_document(file: UploadFile, name: str = Form(...), db: Session =
 
     # For each part, generate an embedding and store it
     docs = []
-    document_id = name+"-"+str(uuid.uuid4())  # or any unique ID generation logic you prefer
+    document_id = str(uuid.uuid4())  # or any unique ID generation logic you prefer
     stored_ids = []
     for part_id, part_content in enumerate(content_parts, 1):
         id = str(uuid.uuid4())
@@ -57,7 +57,7 @@ async def ingest_document(file: UploadFile, name: str = Form(...), db: Session =
     
     await store_embeddings(docs)
     
-    return {"ids": stored_ids, "status": "Document ingested successfully in parts"}
+    return {"ids": stored_ids, "status": "Document ingested successfully in parts", "docId":document_id}
 
 
 @router.post("/retrieve")
