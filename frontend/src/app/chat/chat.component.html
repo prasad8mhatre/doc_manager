@@ -1,0 +1,18 @@
+<h3>Chat about Document: {{ document.filename }}</h3>
+
+
+<div class="messages">
+  <div *ngFor="let message of messages" class="message">
+    <p [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}">
+      {{ message.text }}
+    </p>
+  </div>
+</div>
+<mat-progress-spinner *ngIf="isLoading" mode="indeterminate" diameter="50"></mat-progress-spinner>
+
+<mat-form-field class="message-input" appearance="fill">
+  <mat-label>Type your message</mat-label>
+  <input matInput [(ngModel)]="newMessage" placeholder="Ask a question">
+</mat-form-field>
+
+<button mat-raised-button color="primary" (click)="sendMessage()">Send</button>

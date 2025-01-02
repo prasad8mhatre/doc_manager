@@ -15,6 +15,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import RetrievalQAWithSourcesChain
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
+from langchain_core.documents import Document
 import os
 from dotenv import load_dotenv
 
@@ -25,10 +26,18 @@ from langchain.chains import (
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import RetrievalQA
+from langchain_core.callbacks.manager import CallbackManagerForChainRun
+from models import Embedding
+from utils.database import query_database_for_docs
+import json
+from langchain import hub
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
+from langchain.schema import Document
 
 load_dotenv()
 
-
+prompt_string = hub.pull("rlm/rag-prompt")
 
 router = APIRouter()
 count = 0
@@ -60,7 +69,34 @@ model = ChatGoogleGenerativeAI(
 #     return_source_documents=True
 # )
 
+class CustomRetrievalQA(RetrievalQA):
+    def _get_docs(
+        self,
+        question: str,
+        *,
+        run_manager: CallbackManagerForChainRun,
+        docId: str, 
+        query_database_for_docs,  # Dependency to inject the DB session
+    ) -> List[Document]:
+        # Fetch document by docId from the database
+        db_documents = query_database_for_docs()
 
+        # Check if the document was found
+        if not db_documents:
+            raise ValueError(f"No document found with docId: {docId}")
+
+        # Convert the database document to a LangChain Document object
+        my_documents = []
+        for doc in db_documents:
+            new_doc=Document(
+                page_content=doc.document,  # Assuming your model has a `content` field
+                metadata={"source": json.dumps(doc.cmetadata)}  # Assuming a `source` field
+            )
+            my_documents.append(new_doc)
+        return my_documents
+    
+    def run(self, question: str, docID: str = None, query_database_for_docs=None):
+        return super().run(question, docID=docID, query_database_for_docs=query_database_for_docs)
 
 
 
@@ -70,39 +106,30 @@ async def answer_question(query: QAModel, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Question cannot be empty")
 
     
-    documents = retrieve_embeddings(query.question)
+    documents = await retrieve_embeddings(query.question, query.docId)
+    print(documents)
+    #print(json.dumps(documents))
+
+    context = "\n".join([doc.page_content for doc in documents])
     
     if not documents:
         raise ValueError("No relevant documents found.")
-
-
-    memory = ConversationBufferMemory(memory_key="chat_history",return_messages=True, output_key='result')
-
-    #memory.save_context("inputs": "how many company has served","outputs": "2 companies")
-    memory.save_context({"input":  "how many company has served"}, {"result": "2 companies"})
-
-
-   
-
-
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=model,
-        retriever=get_retriever(),
-        chain_type="stuff",
-        return_source_documents=True,
-        memory = memory
-
-    )
     
-        
-    response = qa_chain.invoke(query.question)
+    #prompt = PromptTemplate(template=prompt_string, input_variables=["context", "question"])
+
+    chain = LLMChain(llm=model, prompt=prompt_string)
+    response = chain.run(context=context, question=query.question)
+
+
+
+    
 
 
     
     print("Response:"+ str(response))
 
     
-    return {"answer": response['result'], "documents": response['source_documents']}
+    return {"answer": response, "documents": documents}
 
 
    

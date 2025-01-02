@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body,Headers, Param, UseGuards, UploadedFile, UseInterceptors, UnauthorizedException,Injectable } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body,Headers, Param, UseGuards, UploadedFile, UseInterceptors, UnauthorizedException,Injectable, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
@@ -21,8 +21,34 @@ export class DocumentsController {
   ) {}
 
   @Get()
-  async findAll() {
-    return this.documentsService.findAll();
+  async findAll( @Headers() headers: Record<string, string>) {
+    
+    const authHeader = headers['authorization'];
+
+    console.log("IN post header:"  +authHeader)
+    // Check for Bearer token in the Authorization header
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log("No bearer found")
+      throw new UnauthorizedException('Invalid authorization header');
+    }
+    
+
+    // Extract token by removing 'Bearer ' prefix
+    const token = authHeader.replace('Bearer ', '');
+    try {
+      // Validate the token's signature
+      const decoded = this.jwtService.verify(token); // Automatically checks signature and expiration
+      console.log("IN post decoded:"  + JSON.stringify(decoded))
+
+      // Extract userId from the decoded payload
+      const userId = decoded.sub;
+      const docs = this.documentsService.findAll(userId);
+      console.log("docs:" + JSON.stringify(docs));
+      return docs;
+    } catch(error){
+      throw new InternalServerErrorException('Invalid or expired token');
+    }
+    return [];
   }
 
   @Post()
@@ -56,7 +82,7 @@ export class DocumentsController {
       const userId = decoded.sub;
 
       if (!userId) {
-        throw new UnauthorizedException('Invalid token payload');
+        throw new BadRequestException('Invalid token payload');
       }
 
       const createDocumentDto = new CreateDocumentDto();
@@ -65,10 +91,11 @@ export class DocumentsController {
       createDocumentDto.uploadedBy = userId;
 
       if (!file) {
-        throw new UnauthorizedException('No file uploaded');
+        throw new BadRequestException('No file uploaded');
       }
 
       const ingestResponse = await this.sendFileToIngestAPI(file, token);
+      console.log("Response from ingestion server: " +  JSON.stringify(ingestResponse))
       createDocumentDto.docId = ingestResponse.docId;
 
       // Pass the userId along with the document creation DTO
@@ -76,7 +103,7 @@ export class DocumentsController {
         ...createDocumentDto
       });
     } catch (error) {
-      throw new UnauthorizedException('Invalid or expired token');
+      throw new InternalServerErrorException('Invalid or expired token');
     }
   }
 
@@ -112,7 +139,7 @@ export class DocumentsController {
       return response.data;  // Return the response data from the /ingest API
     } catch (error) {
       console.error("Error while calling api:"  + error)
-      throw new UnauthorizedException('Failed to ingest file to the external API');
+      throw new InternalServerErrorException('Failed to ingest file to the external API');
     }
   }
 }

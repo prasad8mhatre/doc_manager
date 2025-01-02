@@ -1,0 +1,24 @@
+<div class="signup-container mat-elevation-z8">
+  <mat-card style="padding: 20px;">
+    <mat-card-title>Sign Up</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="signUp()" class="signup-form">
+        
+        <!-- Username -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Username</mat-label>
+          <input matInput id="username" type="text" [(ngModel)]="user.username" name="username" required>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput id="password" type="password" [(ngModel)]="user.password" name="password" required>
+        </mat-form-field>
+
+        <!-- Sign Up Button -->
+        <button mat-raised-button color="primary" type="submit" class="full-width">Sign Up</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,61 @@
+<div class="document-management-container" style="display: flex; height: 95vh;">
+
+  <!-- 60% for Documents -->
+  <div class="document-list-container" style="flex: 60%; padding: 20px;">
+    <h2 class="title">Document Management</h2>
+
+    <div class="upload-section">
+      <input type="file" (change)="onFileChange($event)" id="fileInput" />
+      <button (click)="uploadDocument()" mat-raised-button color="primary" class="upload-button">Upload Document</button>
+    </div>
+
+    <div *ngIf="documents.length === 0" class="no-documents-message">
+      <p>No documents uploaded yet.</p>
+    </div>
+
+    <div *ngIf="documents.length > 0" class="document-table">
+      <table mat-table [dataSource]="documents" class="mat-elevation-z8">
+        <ng-container matColumnDef="docId">
+          <th mat-header-cell *matHeaderCellDef> Document ID </th>
+          <td mat-cell *matCellDef="let document"> {{ document.docId }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="filename">
+          <th mat-header-cell *matHeaderCellDef> Filename </th>
+          <td mat-cell *matCellDef="let document"> {{ document.filename }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="uploadedBy">
+          <th mat-header-cell *matHeaderCellDef> Uploaded By </th>
+          <td mat-cell *matCellDef="let document"> {{ document.uploadedBy }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef> Created At </th>
+          <td mat-cell *matCellDef="let document"> {{ document.createdAt | date: 'medium' }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let document">
+            <button mat-icon-button (click)="deleteDocument(document.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button (click)="openChat(document)">
+              <mat-icon>chat</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 40% for Chat -->
+  <div class="chat-container" style="flex: 40%; background-color: #f1f1f1; padding: 20px;">
+    <app-chat *ngIf="selectedDocument" [document]="selectedDocument"></app-chat>
+  </div>
+
+</div>
