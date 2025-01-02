@@ -1,0 +1,54 @@
+/* Navbar container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+  }
+  
+  .navbar-left .logo {
+    font-size: 24px;
+    text-decoration: none;
+    color: white;
+  }
+  
+  .navbar-center {
+    display: flex;
+  }
+  
+  .nav-item {
+    margin-left: 20px;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+  }
+  
+  .nav-item:hover {
+    text-decoration: underline;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .username {
+    margin-right: 20px;
+    font-size: 16px;
+  }
+  
+  button, a {
+    background-color: #333;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  button:hover, a:hover {
+    background-color: #333;
+  }
+  

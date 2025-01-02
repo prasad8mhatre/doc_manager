@@ -1,0 +1,13 @@
+<header>
+    <nav class="navbar">
+      <div class="navbar-left">
+      </div>
+      
+      <div class="navbar-right">
+        <span *ngIf="isLoggedIn" class="username">{{ username }}</span>
+        <button *ngIf="isLoggedIn" mat-button (click)="logout()">Logout</button>
+        <!-- Display a login button when the user is not logged in -->
+        <a *ngIf="!isLoggedIn" routerLink="/login" mat-button>Login</a>
+      </div>
+    </nav>
+  </header>
