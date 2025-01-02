@@ -1,20 +1,16 @@
-# Use official Python image as base
-FROM python:3.10-slim
+FROM python:3.9-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the project requirements file
-COPY requirements.txt .
-
 # Install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code
 COPY . .
 
-# Expose the application port
-EXPOSE 8000
+# Expose the port
+EXPOSE 9000
 
-# Set the default command to run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Run the application
+CMD ["python", "main.py"]
