@@ -1,4 +1,8 @@
-# doc_manager
+# doc_manager : Document Management and RAG-based Q&A Application
+Purpose: Three-part application that involves backend services,
+frontend interface, and Q&A features powered by a Retrieval-Augmented Generation (RAG)
+system. The application aims to manage users, documents, and an ingestion process that
+generates embeddings for document retrieval in a Q&A setting.
 
 
 # Documentation:
