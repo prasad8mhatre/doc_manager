@@ -31,4 +31,9 @@ export class UsersService {
     user.role = role;
     return this.userRepository.save(user);
   }
+
+  async deleteUser(id: number) {
+    await this.userRepository.delete(id);
+    return true;
+  }
 }

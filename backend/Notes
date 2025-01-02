@@ -8,7 +8,8 @@ CREATE TABLE users (
 
 CREATE TABLE documents (
     id SERIAL PRIMARY KEY,
-    filename VARCHAR(255) NOT NULL,
+    filename VARCHAR(500) NOT NULL,
+    docId VARCHAR(500) NOT NULL,
     uploaded_by INT REFERENCES users(id),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

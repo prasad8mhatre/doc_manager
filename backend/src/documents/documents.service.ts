@@ -12,8 +12,8 @@ export class DocumentsService {
     private readonly documentRepository: Repository<Document>,
   ) {}
 
-  async findAll() {
-    return this.documentRepository.find();
+  async findAll(id: number) {
+    return this.documentRepository.find({ where: { id } });
   }
 
   async create(createDocumentDto: CreateDocumentDto) {
@@ -21,6 +21,7 @@ export class DocumentsService {
     const doc = new Document();
     doc.filename = createDocumentDto.file;
     doc.uploadedBy = createDocumentDto.uploadedBy;
+    doc.docId = createDocumentDto.docId;
     return this.documentRepository.save(doc);
   }
 
