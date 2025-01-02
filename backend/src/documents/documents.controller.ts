@@ -48,7 +48,6 @@ export class DocumentsController {
     } catch(error){
       throw new InternalServerErrorException('Invalid or expired token');
     }
-    return [];
   }
 
   @Post()
@@ -86,7 +85,7 @@ export class DocumentsController {
       }
 
       const createDocumentDto = new CreateDocumentDto();
-      createDocumentDto.file = file.originalname
+      createDocumentDto.file = file.originalname;
 
       createDocumentDto.uploadedBy = userId;
 
