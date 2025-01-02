@@ -86,3 +86,9 @@ npm run test:api
 
 # UI automation
 npx playwright test --headed
+
+
+Architecture:
+=======================
+![diagram drawio](https://github.com/user-attachments/assets/03848b25-b43f-450b-ba2a-ee6e3a0cde20)
+
