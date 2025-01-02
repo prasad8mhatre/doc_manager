@@ -59,7 +59,7 @@ describe('UsersController', () => {
   describe('deleteUser', () => {
     it('should delete a user successfully', async () => {
       const userId = '1';
-      const result = { id: +userId };
+      const result = true;
       jest.spyOn(usersService, 'deleteUser').mockResolvedValue(result);
 
       expect(await controller.deleteUser(userId)).toEqual(result);

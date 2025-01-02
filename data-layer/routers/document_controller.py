@@ -60,14 +60,6 @@ async def ingest_document(file: UploadFile, name: str = Form(...), db: Session =
     return {"ids": stored_ids, "status": "Document ingested successfully in parts", "docId":document_id}
 
 
-@router.post("/retrieve")
-async def retrieve_documents(body: dict = Body(...)):
-    query = body.get("query")
-    documents = retrieve_embeddings(query,2)
-    if not documents:
-        return {"status": "No matching documents found", "document_ids": []}
-    return {"status": "Documents fetched", "documents": documents}
-
 @router.post("/selection")
 async def select_documents(document_ids: list, db: Session = Depends(get_db)):
     documents = retrieve_embeddings(db, document_ids)

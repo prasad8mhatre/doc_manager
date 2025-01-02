@@ -22,3 +22,14 @@ CREATE TABLE ingestion_processes (
     started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     completed_at TIMESTAMP
 );
+
+
+
+===============
+Test Result:
+
+Test Suites: 2 passed, 2 total
+Tests:       13 passed, 13 total
+Snapshots:   0 total
+Time:        4.714 s, estimated 5 s
+Ran all test suites.

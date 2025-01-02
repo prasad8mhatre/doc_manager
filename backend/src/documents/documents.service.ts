@@ -13,7 +13,7 @@ export class DocumentsService {
   ) {}
 
   async findAll(id: number) {
-    return this.documentRepository.find({ where: { id } });
+    return this.documentRepository.find({ where: { uploadedBy: id } });
   }
 
   async create(createDocumentDto: CreateDocumentDto) {

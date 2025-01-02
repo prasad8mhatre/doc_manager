@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "ecff3bb1-5b3e-43b8-8c87-6a55bdd2889e",
+		"name": "qa",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2162428",
+		"_collection_link": "https://dominate.postman.co/workspace/solvobot~e8e323a9-e2cb-4992-a04b-34c1c06a26ba/collection/2162428-ecff3bb1-5b3e-43b8-8c87-6a55bdd2889e?action=share&source=collection_link&creator=2162428"
+	},
+	"item": [
+		{
+			"name": "datalayer",
+			"item": [
+				{
+					"name": "ingestion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/prasad/Downloads/Coding Exercise.pdf"
+								},
+								{
+									"key": "name",
+									"value": "prasads",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:9000/documents/ingestion",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"documents",
+								"ingestion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "infer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\":\"how many patent filed\",\n    \"docId\": \"3fa7f702-bffc-45f4-83ce-ab884563f9d0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:9000/qa/infer",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"qa",
+								"infer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "backendservice",
+			"item": [
+				{
+					"name": "register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"pm.test(\"Response contains expected field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"id\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const randomNumber = Math.floor(Math.random() * 100000);",
+									"",
+									"// Create a random email using the number",
+									"const randomEmail = `user${randomNumber}@example.com`;",
+									"",
+									"pm.globals.set(\"randomUsername\", randomEmail);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"{{randomUsername}}\",\n    \"password\":\"123\",\n    \"role\": \"user\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/auth/register",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"const username = pm.globals.get(\"randomUsername\");",
+									"console.log(username)",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"pm.test(\"Response contains expected field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.globals.set(\"accessToken\", jsonData[\"accessToken\"]);",
+									"    pm.expect(jsonData).to.have.property(\"accessToken\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"username\":\"{{randomUsername}}\",\n    \"password\":\"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4000/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"pm.test(\"All objects have required properties\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    jsonData.forEach((user) => {",
+									"        pm.expect(user).to.have.property(\"id\");",
+									"        pm.expect(user).to.have.property(\"username\");",
+									"        pm.expect(user).to.have.property(\"role\");",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/users",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createdoc",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 1500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(1500);",
+									"});",
+									"",
+									"pm.test(\"Response contains expected field\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"id\");",
+									"    pm.expect(jsonData).to.have.property(\"filename\");",
+									"    pm.expect(jsonData).to.have.property(\"docId\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InByYXNhZEBnbWFpbC5jb20iLCJzdWIiOjQsInJvbGUiOiJhZG1pbiIsImlhdCI6MTczNTczMzkyNywiZXhwIjoxNzM1NzM3NTI3fQ.-_GYWddc8JVl2oCpbdNubHn4Qw64LxmCbKF7zfP9_uE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/prasad/Downloads/Coding Exercise.pdf"
+								},
+								{
+									"key": "name",
+									"value": "test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:4000/documents",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"documents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get documents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 500ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(500);",
+									"});",
+									"",
+									"pm.test(\"All objects have required properties\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    jsonData.forEach((user) => {",
+									"        pm.expect(user).to.have.property(\"id\");",
+									"        pm.expect(user).to.have.property(\"filename\");",
+									"        pm.expect(user).to.have.property(\"docId\");",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4000/documents",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"documents"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

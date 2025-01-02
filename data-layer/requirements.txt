@@ -22,3 +22,7 @@ langchain-ollama
 langchain-google-genai
 pillow
 starlette
+pytest
+httpx
+fpdf
+requests

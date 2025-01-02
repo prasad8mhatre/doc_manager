@@ -1,6 +1,7 @@
 # doc_manager
 
 
+
 # data layer
 
 python -m venv venv
@@ -25,3 +26,20 @@ http://localhost:3000/ -
 
 http://localhost:3000/api - swagger doc
 
+
+# frontend
+npm install
+
+ng serve
+
+npx playwright install
+
+
+
+
+#  api automation
+npm run test:api
+
+
+# UI automation
+npx playwright test --headed
