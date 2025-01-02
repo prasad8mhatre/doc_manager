@@ -1,0 +1,36 @@
+<div class="user-management-container">
+    <h2>User Management</h2>
+  
+    <!-- <div class="new-user-form">
+      <h3>Create New User</h3>
+      <form (ngSubmit)="addUser()">
+        <label for="username">Username</label>
+        <input id="username" [(ngModel)]="newUser.username" name="username" required>
+  
+        
+  
+        <label for="role">Role</label>
+        <select id="role" [(ngModel)]="newUser.role" name="role" required>
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+  
+        <button type="submit">Add User</button>
+      </form>
+    </div> -->
+  
+    <div class="user-list">
+      <h3>Existing Users</h3>
+      <ul>
+        <li *ngFor="let user of users">
+          <span>{{ user.username }} ({{ user.role }})</span>
+          <span>
+            <select [(ngModel)]="user.role" (change)="updateRole(user)">
+              <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+            </select>
+          </span>
+          <button (click)="deleteUser(user.id)">Delete</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
