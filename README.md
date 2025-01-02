@@ -23,15 +23,33 @@ Backend
 ## How to setup:- 
 
 
+# Prod setup
+==============================
+1. Take a server - ec2 machine
+2. Clone this repo
+3. follow developer setup steps
+4. setup LLM creds and DB creds
+
+
+
+
+
+# Developer setup
+=================================================
 # data layer
 
 python -m venv venv
 
 source venv/bin/activate
 
+-- setup DB
 docker run --name pgvector-container -e POSTGRES_USER=langchain -e POSTGRES_PASSWORD=langchain -e POSTGRES_DB=langchain -p 6024:5432 -d pgvector/pgvector:pg16
 
 python main.py
+
+.env file
+DATABASE_URL=set your cred
+GOOGLE_API_KEY= set your cred
 
 http://localhost:9000/ - 
 
