@@ -1,6 +1,27 @@
 # doc_manager
 
 
+# Documentation:
+This project has 4 parts 
+ 1. Datalayer - RAG, Ingestion on data in vector and can ask question on those document
+ 2. Backend - Management of docuement, user, authentication
+ 3. frontend - frontend for this application
+ 4. Api automation - automation for api exposed by data layer and backend service
+
+
+
+Datalayer - 
+ API documentation - http://localhost:9000/docs - swagger doc
+
+Backend 
+ API documentation - http://localhost:3000/api - swagger doc
+
+
+
+
+
+## How to setup:- 
+
 
 # data layer
 
