@@ -1,0 +1,138 @@
+.document-management-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f4f7fb;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .upload-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  #fileInput {
+    margin-right: 10px;
+  }
+  
+  .upload-button {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .upload-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .no-documents-message {
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+  }
+  
+  .document-list {
+    margin-top: 20px;
+  }
+  
+  .document-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fff;
+    margin: 5px 0;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .document-name {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .delete-button {
+    padding: 5px 12px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background-color: #e60000;
+  }
+  
+
+  .document-management-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f4f7fb;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .upload-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  #fileInput {
+    margin-right: 10px;
+  }
+  
+  .upload-button {
+    padding: 8px 20px;
+    color: white;
+  }
+  
+  .no-documents-message {
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+  }
+  
+  .document-table {
+    margin-top: 20px;
+  }
+  
+  .mat-elevation-z8 {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  mat-header-row, mat-row {
+    height: 48px;
+  }
+  
+  mat-header-cell, mat-cell {
+    padding: 16px;
+    text-align: left;
+  }
+  
+  mat-icon-button {
+    color: #ff4d4d;
+  }
+  
+  mat-icon-button:hover {
+    background-color: rgba(255, 77, 77, 0.1);
+  }
+  
