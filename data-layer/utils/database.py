@@ -1,8 +1,10 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
+from models import Embedding
 load_dotenv()
 
 
@@ -13,7 +15,7 @@ if not DATABASE_URL:
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()
@@ -21,3 +23,10 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+
+def query_database_for_docs(self, docID: str) -> dict:
+    database = get_db()
+    db_documents = database.query(Embedding).filter(Embedding.cmetadata.docId == docID).find()
+    return db_documents

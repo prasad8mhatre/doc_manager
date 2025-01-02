@@ -12,6 +12,8 @@ from langchain_postgres.vectorstores import PGVector
 import os
 from dotenv import load_dotenv
 from langchain_core.documents import Document
+import psycopg2
+from psycopg2.extras import RealDictCursor
 load_dotenv()
 
 
@@ -45,6 +47,42 @@ async def store_embeddings(docs):
 
    
 
-def retrieve_embeddings(query, top_k=5):
-    # Use pgvector similarity search to find the top-k closest vectors
-    return pgvector_store.similarity_search(query, k=top_k)
+async def retrieve_embeddings(query, docId, top_k=2):
+    """
+    Perform a similarity search on embeddings within a specific document.
+
+    Args:
+        query (str): The query for similarity search.
+        docId (str): The document ID to restrict the search.
+        top_k (int): Number of top results to return.
+
+    Returns:
+        List[Document]: Top-k similar documents.
+    """
+    # Query to filter embeddings by docId
+    filtered_query = f"""
+        SELECT document, cmetadata
+        FROM langchain_pg_embedding
+        WHERE cmetadata->>'document_id' = %s
+        ORDER BY embedding <-> %s::vector
+        LIMIT %s
+    """
+
+    embedded_query = await generate_embedding(query)
+
+    # Execute the query
+    with psycopg2.connect(os.environ.get("DATABASE_URL_1")) as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+            cursor.execute(filtered_query, (docId,embedded_query,top_k))
+            results = cursor.fetchall()
+
+    # Convert results to Document objects
+    documents = [
+        Document(
+            page_content=row["document"],  # Assuming content is in the first column
+            metadata=row["cmetadata"]      # Assuming metadata is in the second column
+        )
+        for row in results
+    ]
+
+    return documents
