@@ -40,6 +40,7 @@ export class AuthService {
 
   // Logout method
   logout(): void {
+    this.isAuthenticatedSubject.next(false);
     
     localStorage.clear();
   }

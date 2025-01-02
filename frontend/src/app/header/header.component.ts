@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -12,11 +13,18 @@ import { AuthService } from '../auth/auth.service';
 export class HeaderComponent {
   isLoggedIn: boolean = false;  // Track if the user is logged in
   username: string = '';  
+  private authSubscription!: Subscription;
   
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
+    this.authSubscription = this.authService.isAuthenticated$.subscribe(
+      (authStatus) => {
+        this.isLoggedIn = authStatus;
+      }
+    );
+
     // Check if the user is logged in (check localStorage for token or role)
     const token = localStorage.getItem('access_token');
     this.isLoggedIn = !!token; // If a token exists, user is logged in
