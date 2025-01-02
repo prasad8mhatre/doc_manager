@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database with pgvector support
+  postgres:
+    image: postgres:13
+    container_name: pgvector-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=adminpassword
+      - POSTGRES_DB=mydatabase
+    ports:
+      - "6024:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Python-based document ingestion backend (with pgvector support)
+  data-layer:
+    build:
+      context: ./data-layer
+    container_name: data-layer
+    environment:
+      - DATABASE_URL=postgresql://langchain:langchain@localhost:6024/langchain
+    ports:
+      - "9000:9000"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  # NestJS backend for user and document management
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    environment:
+      - DATABASE_URL=postgresql://admin:adminpassword@postgres:5432/mydatabase
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  # Angular frontend
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    command: /bin/sh -c "npm install && npm run start --host 0.0.0.0"
+
+volumes:
+  pg_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
